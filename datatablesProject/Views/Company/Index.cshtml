@@ -1,0 +1,77 @@
+﻿@model List<CariHesaplar>
+@{
+    ViewBag.Title = "Cari Hesaplar";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+<!-- DataTables CSS -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css" />
+<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css" />
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4">Cari Hesaplar</h2>
+    <table id="cariTable" class="table table-bordered table-striped dt-responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Hesap ID</th>
+                <th>Cari Hesap</th>
+                <th>Vergi No</th>
+                <th>Adres</th>
+                <th>Telefon</th>
+                <th>İl</th>
+                <th>İlçe</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.HesapID</td>
+                    <td>@item.CariHesapAdi</td>
+                    <td>@item.cariVergiNO</td>
+                    <td>@item.CariAdres</td>
+                    <td>@item.CariTelNO</td>
+                    <td>@item.AdresIL</td>
+                    <td>@item.CariILce</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <!-- jQuery ve DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap4.min.js"></script>
+
+    <!-- DataTables Buttons -->
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
+
+    <!-- Export İçin Ekstra JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+
+    <!-- DataTable Başlat -->
+    <script>
+        $(document).ready(function () {
+            $("#cariTable").DataTable({
+                responsive: true,
+                autoWidth: false,
+                dom: 'Bfrtip',
+                buttons: ['copy', 'excel', 'pdf', 'print', 'colvis'],
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                }
+            });
+        });
+    </script>
+}
