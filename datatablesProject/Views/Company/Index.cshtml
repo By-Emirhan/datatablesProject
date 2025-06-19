@@ -6,6 +6,7 @@
 
 @section Styles {
 <!-- DataTables CSS -->
+<link rel="stylesheet" href="~/css/site.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap4.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bootstrap4.min.css" />
 <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap4.min.css" />
@@ -30,7 +31,15 @@
             {
                 <tr>
                     <td>@item.HesapID</td>
-                    <td>@item.CariHesapAdi</td>
+                    <!-- Bu alanda Satır içerisinde, Hangi Cari seçildiyse ID'sine göre işlem yapabilmek için
+                        <a> ekleyerek, Link metodu oluşturdum. -->
+                    <td>
+                        <!-- <a> satırında, veritabanından hangi ID gelirse o ID tanımlanmış olacak -->
+                        <a href="/Home/Index/id=@item.HesapID"
+                           style="text-decoration:none;color:black">
+                           @item.CariHesapAdi
+                        </a>
+                    </td>
                     <td>@item.cariVergiNO</td>
                     <td>@item.CariAdres</td>
                     <td>@item.CariTelNO</td>
@@ -62,16 +71,53 @@
 
     <!-- DataTable Başlat -->
     <script>
+        let selectedRows = new Set();
+
         $(document).ready(function () {
-            $("#cariTable").DataTable({
+            const table = $('#cariTable').DataTable({
                 responsive: true,
                 autoWidth: false,
                 dom: 'Bfrtip',
                 buttons: ['copy', 'excel', 'pdf', 'print', 'colvis'],
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/tr.json"
+                },
+                drawCallback: function () {
+                    applyRowHighlighting(); // her sayfa, filtre, sıralama sonrası
                 }
             });
+
+            // İlk yüklemede checkbox eventlerini bağla
+            applyRowHighlighting();
+
+            function applyRowHighlighting() {
+                $(".select-row").off("change").on("change", function () {
+                    const row = $(this).closest("tr");
+                    const id = $(this).data("id");
+
+                    if ($(this).is(":checked")) {
+                        row.addClass("selected-row");
+                        selectedRows.add(id);
+                    } else {
+                        row.removeClass("selected-row");
+                        selectedRows.delete(id);
+                    }
+                });
+
+                // Sayfa yenilenince daha önce seçilenleri işaretle
+                $(".select-row").each(function () {
+                    const id = $(this).data("id");
+                    const row = $(this).closest("tr");
+
+                    if (selectedRows.has(id)) {
+                        $(this).prop("checked", true);
+                        row.addClass("selected-row");
+                    } else {
+                        $(this).prop("checked", false);
+                        row.removeClass("selected-row");
+                    }
+                });
+            }
         });
     </script>
 }
